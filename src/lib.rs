@@ -49,8 +49,8 @@ impl TimePass {
 
   /// Get every entry.
   #[must_use]
-  pub fn get_all(&self) -> &Vec<Entry> {
-    &self.data
+  pub fn get_all(&self) -> Vec<&Entry> {
+    self.data.iter().collect()
   }
 
   /// Get entries by name, since the name is not unique,

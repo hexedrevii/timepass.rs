@@ -77,6 +77,7 @@ pub enum CliCommands {
     date: Option<NaiveDate>,
   },
 
+  /// Options for importing or exporting data.
   Data {
     #[arg(
       long,

@@ -5,6 +5,7 @@ pub struct TimeDifference {
 }
 
 impl TimeDifference {
+  #[must_use]
   pub fn new(years: i32, months: i32, days: i32) -> Self {
     Self {
       years,

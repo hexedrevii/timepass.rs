@@ -4,7 +4,7 @@ use clap::{Parser, Subcommand};
 /// Helper to parse from (YYYY/MM/DD) to (DD/MM/YYYY)
 fn parse_date(arg: &str) -> Result<NaiveDate, String> {
   NaiveDate::parse_from_str(arg, "%d/%m/%Y")
-    .map_err(|e| format!("Dates must use DD/MM/YYYY format. Error: {}", e))
+    .map_err(|e| format!("Dates must use DD/MM/YYYY format. Error: {e}"))
 }
 
 #[derive(Parser)]

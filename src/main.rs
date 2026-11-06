@@ -54,7 +54,7 @@ fn main() {
   let config = match config::config_init() {
     Ok(path) => path,
     Err(e) => {
-      eprintln!("timepass: {}", e);
+      eprintln!("timepass: {e}");
       process::exit(1);
     }
   };
@@ -63,7 +63,7 @@ fn main() {
   let mut tp = match TimePass::new(data) {
     Ok(v) => v,
     Err(e) => {
-      eprintln!("timepass: {}", e);
+      eprintln!("timepass: {e}");
       process::exit(1);
     }
   };
@@ -73,9 +73,9 @@ fn main() {
     if entries.is_empty() {
       println!("Nobody here but us chickens!\nTry adding some entries. (timepass add --help)");
     } else {
-      for entry in entries.iter() {
+      for entry in entries {
         if let Err(e) = display_entry(entry) {
-          eprintln!("timepass: Could not display entry: {}", e);
+          eprintln!("timepass: Could not display entry: {e}");
           process::exit(1);
         }
       }
@@ -91,9 +91,9 @@ fn main() {
     if entries.is_empty() {
       println!("Nobody here but us chickens!\nTry adding some entries. (timepass add --help)");
     } else {
-      for entry in entries.iter() {
+      for entry in &entries {
         if let Err(e) = display_entry(entry) {
-          eprintln!("timepass: Could not display entry: {}", e);
+          eprintln!("timepass: Could not display entry: {e}");
           process::exit(1);
         }
       }
@@ -103,7 +103,7 @@ fn main() {
   if let Some(id) = cli.id {
     if let Some(entry) = tp.get_id(&id) {
       if let Err(e) = display_entry(entry) {
-        eprintln!("timepass: Could not display entry: {}", e);
+        eprintln!("timepass: Could not display entry: {e}");
         process::exit(1);
       }
     } else {
@@ -113,23 +113,22 @@ fn main() {
 
   match cli.command {
     Some(CliCommands::Add { name, date }) => {
-      if let Some(value) = date {
-        if value > Local::now().date_naive() {
-          eprintln!("timepass: The provided date ({}) is in the future.", value);
+      if let Some(value) = date
+        && value > Local::now().date_naive() {
+          eprintln!("timepass: The provided date ({value}) is in the future.");
           std::process::exit(1);
         }
-      }
 
       tp.add(name, date.unwrap_or(Local::now().date_naive()));
     }
 
-    Some(CliCommands::Remove { name, id }) => {}
+    Some(CliCommands::Remove { name: _, id: _ }) => {}
 
     None => {}
   }
 
   if let Err(e) = tp.commit() {
-    eprintln!("timepass: {}", e);
+    eprintln!("timepass: {e}");
     process::exit(1);
   }
 }

@@ -26,7 +26,7 @@ impl TimePass {
     if !path.exists() {
       return Ok(Self {
         data: vec![],
-        path: path,
+        path,
       });
     }
 
@@ -34,7 +34,7 @@ impl TimePass {
     let data: Data = serde_json::from_str(&contents)?;
     Ok(Self {
       data: data.entries,
-      path: path,
+      path,
     })
   }
 
@@ -43,20 +43,22 @@ impl TimePass {
     let entry = Entry {
       id: Uuid::new_v4().to_string(),
 
-      name: name,
-      date: date,
+      name,
+      date,
     };
 
     self.data.push(entry);
   }
 
   /// Get every entry.
+  #[must_use]
   pub fn get_all(&self) -> &Vec<Entry> {
     &self.data
   }
 
   /// Get entries by name, since the name is not unique,
   /// multiple entries can share the same name.
+  #[must_use]
   pub fn get_name(&self, name: &str) -> Vec<&Entry> {
     self
       .data
@@ -66,6 +68,7 @@ impl TimePass {
   }
 
   /// Get entry by ID.
+  #[must_use]
   pub fn get_id(&self, id: &str) -> Option<&Entry> {
     self.data.iter().find(|entry| entry.id == id)
   }

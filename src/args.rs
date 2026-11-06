@@ -9,18 +9,23 @@ fn parse_date(arg: &str) -> Result<NaiveDate, String> {
 
 #[derive(Parser)]
 pub struct Cli {
-  #[arg(long, short, help = "Show specific entry via name.")]
+  #[arg(
+    long,
+    short,
+    conflicts_with = "id",
+    help = "Show specific entry via name."
+  )]
   pub name: Option<String>,
 
   #[arg(long, short, help = "Show specific entry via ID.")]
   pub id: Option<String>,
 
   #[command(subcommand)]
-  command: Option<CliCommands>,
+  pub command: Option<CliCommands>,
 }
 
 #[derive(Subcommand)]
-enum CliCommands {
+pub enum CliCommands {
   /// Add a new entry to the system.
   Add {
     #[arg(long, short, help = "The name of the new entry.")]

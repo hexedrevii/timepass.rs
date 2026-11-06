@@ -7,6 +7,7 @@ use uuid::Uuid;
 
 pub mod models;
 
+pub use models::TimeDifference;
 pub use models::data::Data;
 pub use models::entry::Entry;
 
@@ -47,6 +48,22 @@ impl TimePass {
     };
 
     self.data.push(entry);
+  }
+
+  pub fn get_all(&self) -> &Vec<Entry> {
+    &self.data
+  }
+
+  pub fn get_name(&self, name: &str) -> Vec<&Entry> {
+    self
+      .data
+      .iter()
+      .filter(|entry| entry.name == name)
+      .collect()
+  }
+
+  pub fn get_id(&self, id: &str) -> Option<&Entry> {
+    self.data.iter().find(|entry| entry.id == id)
   }
 
   /// Write the data vector to the specified path.

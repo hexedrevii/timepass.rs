@@ -9,7 +9,7 @@ mod args;
 mod config;
 
 fn format(entry: &Entry) -> Result<String, &'static str> {
-  let diff = entry.get_time_passed()?;
+  let diff = entry.time_since()?;
 
   if diff.years == 0 && diff.months == 0 && diff.days == 0 {
     return Ok("added today.".to_string());

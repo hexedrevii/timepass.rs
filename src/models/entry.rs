@@ -11,7 +11,7 @@ pub struct Entry {
 }
 
 impl Entry {
-  pub fn get_time_passed(&self) -> Result<TimeDifference, &'static str> {
+  pub fn time_since(&self) -> Result<TimeDifference, &'static str> {
     let now = Local::now().date_naive();
     let past = self.date;
 

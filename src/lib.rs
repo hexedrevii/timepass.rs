@@ -2,6 +2,7 @@ use chrono::NaiveDate;
 use serde::Serialize;
 use std::error::Error;
 use std::fs;
+use std::path::Path;
 use std::path::PathBuf;
 use uuid::Uuid;
 
@@ -33,6 +34,22 @@ impl TimePass {
       data: data.entries,
       path,
     })
+  }
+
+  pub fn import(&mut self, path: &Path) -> Result<(), Box<dyn Error>> {
+    let contents = fs::read_to_string(path)?;
+    let new: Data = serde_json::from_str(&contents)?;
+    self.data = new.entries;
+
+    Ok(())
+  }
+
+  pub fn dump(&self) -> Result<String, serde_json::Error> {
+    let data = DataRef {
+      entries: &self.data,
+    };
+
+    Ok(serde_json::to_string_pretty(&data)?)
   }
 
   /// Add an entry to the data vector.
@@ -86,12 +103,7 @@ impl TimePass {
 
   /// Write the data vector to the specified path.
   pub fn commit(&self) -> Result<(), Box<dyn Error>> {
-    let data = DataRef {
-      entries: &self.data,
-    };
-
-    let json = serde_json::to_string_pretty(&data)?;
-    fs::write(&self.path, &json)?;
+    fs::write(&self.path, &self.dump()?)?;
 
     Ok(())
   }

@@ -1,7 +1,7 @@
 use crate::args::{Cli, CliCommands};
 use chrono::Local;
 use clap::Parser;
-use std::{env, process};
+use std::{env, fs, process};
 
 use timepass::TimePass;
 
@@ -22,7 +22,7 @@ fn main() {
   let mut tp = match TimePass::new(data) {
     Ok(v) => v,
     Err(e) => {
-      eprintln!("timepass: {e}");
+      eprintln!("timepass: Could not initialise: {e}");
       process::exit(1);
     }
   };
@@ -76,6 +76,31 @@ fn main() {
 
       if delete_everything {
         tp.remove_all();
+      }
+    }
+
+    Some(CliCommands::Data { import, export }) => {
+      if let Some(path) = import {
+        if let Err(e) = tp.import(&path) {
+          eprintln!("timepass: Could not import data: {e}");
+          process::exit(1);
+        }
+      }
+
+      if let Some(path) = export {
+        match tp.dump() {
+          Ok(json) => {
+            if let Err(e) = fs::write(path, json) {
+              eprintln!("timepass: Could not export data: {e}");
+              process::exit(1);
+            }
+          }
+
+          Err(e) => {
+            eprintln!("timepass: Could not export data: {e}");
+            process::exit(1);
+          }
+        }
       }
     }
 

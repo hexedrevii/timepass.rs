@@ -45,13 +45,19 @@ pub enum CliCommands {
     #[arg(
       long,
       short,
-      required_unless_present = "id",
-      conflicts_with = "id",
+      required_unless_present_any = ["id", "delete_everything"],
+      conflicts_with_all = ["id", "delete_everything"],
       help = "Remove entry via name."
     )]
     name: Option<String>,
 
-    #[arg(long, short, help = "Remove entry via ID.")]
+    #[arg(long, short, help = "Remove entry via ID.", conflicts_with_all = ["name", "delete_everything"])]
     id: Option<String>,
+
+    #[arg(
+      long = "delete-everything-yes-i-am-very-sure",
+      help = "Erase all the data in the system."
+    )]
+    delete_everything: bool,
   },
 }

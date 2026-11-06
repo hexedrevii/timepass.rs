@@ -24,10 +24,7 @@ pub struct TimePass {
 impl TimePass {
   pub fn new(path: PathBuf) -> Result<Self, Box<dyn Error>> {
     if !path.exists() {
-      return Ok(Self {
-        data: vec![],
-        path,
-      });
+      return Ok(Self { data: vec![], path });
     }
 
     let contents = fs::read_to_string(&path)?;
@@ -71,6 +68,20 @@ impl TimePass {
   #[must_use]
   pub fn get_id(&self, id: &str) -> Option<&Entry> {
     self.data.iter().find(|entry| entry.id == id)
+  }
+
+  pub fn remove_name(&mut self, name: &str) {
+    self.data.retain(|entry| entry.name != name);
+  }
+
+  pub fn remove_id(&mut self, id: &str) {
+    if let Some(idx) = self.data.iter().position(|entry| entry.id == id) {
+      self.data.swap_remove(idx);
+    }
+  }
+
+  pub fn remove_all(&mut self) {
+    self.data.clear();
   }
 
   /// Write the data vector to the specified path.

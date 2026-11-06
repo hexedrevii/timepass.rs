@@ -114,15 +114,32 @@ fn main() {
   match cli.command {
     Some(CliCommands::Add { name, date }) => {
       if let Some(value) = date
-        && value > Local::now().date_naive() {
-          eprintln!("timepass: The provided date ({value}) is in the future.");
-          std::process::exit(1);
-        }
+        && value > Local::now().date_naive()
+      {
+        eprintln!("timepass: The provided date ({value}) is in the future.");
+        std::process::exit(1);
+      }
 
       tp.add(name, date.unwrap_or(Local::now().date_naive()));
     }
 
-    Some(CliCommands::Remove { name: _, id: _ }) => {}
+    Some(CliCommands::Remove {
+      name,
+      id,
+      delete_everything,
+    }) => {
+      if let Some(value) = name {
+        tp.remove_name(&value);
+      }
+
+      if let Some(value) = id {
+        tp.remove_id(&value);
+      }
+
+      if delete_everything {
+        tp.remove_all();
+      }
+    }
 
     None => {}
   }

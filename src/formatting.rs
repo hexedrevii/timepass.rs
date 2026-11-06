@@ -1,3 +1,4 @@
+use colored::Colorize;
 use std::process;
 
 use timepass::Entry;
@@ -43,10 +44,16 @@ pub fn display_entries(entries: &[&Entry]) {
     return;
   }
 
+  println!();
   for entry in entries {
     match format_entry_date(entry) {
       Ok(fmt) => {
-        println!("{} [{}]\n  - {}\n", entry.name, entry.id, fmt);
+        println!(
+          "{} {}\n  - {}\n",
+          entry.name.green().bold(),
+          format!("[{}]", entry.id).ansi_color(8),
+          fmt.ansi_color(207)
+        );
       }
 
       Err(e) => {

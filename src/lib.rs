@@ -50,10 +50,13 @@ impl TimePass {
     self.data.push(entry);
   }
 
+  /// Get every entry.
   pub fn get_all(&self) -> &Vec<Entry> {
     &self.data
   }
 
+  /// Get entries by name, since the name is not unique,
+  /// multiple entries can share the same name.
   pub fn get_name(&self, name: &str) -> Vec<&Entry> {
     self
       .data
@@ -62,6 +65,7 @@ impl TimePass {
       .collect()
   }
 
+  /// Get entry by ID.
   pub fn get_id(&self, id: &str) -> Option<&Entry> {
     self.data.iter().find(|entry| entry.id == id)
   }
